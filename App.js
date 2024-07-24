@@ -1,13 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import CustomMarker from './components/CustomMarker';
+import axios from 'axios';
 
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [route, setRoute] = useState([]);
+
+
+ 
+
+  const postData =() => {
+    axios({
+      method:'post',
+      url:`http://127.0.0.1:8000/api/updateLocation`,
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+    },
+      data:{
+        "userId":"1",
+        "latitude":"17.98939",
+        "longitude":"72.98347"
+      }
+    }).then((res) => {
+      console.log(res.data);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
 
   useEffect(() => {
     (async () => {
@@ -56,6 +81,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+    <Button title='Post Data' onPress={() => postData()} />
       {location ? (
         <MapView
           style={styles.map}
@@ -98,6 +124,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop:90,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
